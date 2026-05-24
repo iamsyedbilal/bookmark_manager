@@ -8,8 +8,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // Router
 import { RouterProvider } from "react-router-dom";
 import router from "./app/router.tsx";
-// Toast
-import { Toaster } from "./components/ui/sonner.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,7 +22,6 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
-      <Toaster />
     </QueryClientProvider>
   </StrictMode>,
 );

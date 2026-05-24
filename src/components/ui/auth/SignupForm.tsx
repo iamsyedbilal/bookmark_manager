@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupFormData } from "./auth.schema";
+import { useSignup } from "../../../features/auth/auth.queries";
 
 import { Input } from "../input";
 import { Label } from "../label";
@@ -11,7 +12,8 @@ export default function SignupForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -21,8 +23,12 @@ export default function SignupForm() {
     },
   });
 
-  async function onSubmit(data: SignupFormData) {
-    console.log(data);
+  const { signup, isPending } = useSignup();
+
+  function onSubmit(data: SignupFormData) {
+    signup(data, {
+      onSettled: () => reset(),
+    });
   }
 
   return (
@@ -33,56 +39,82 @@ export default function SignupForm() {
       footerLinkText="Log in"
       footerLinkTo="/login"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 bg-card ">
         {/* Full Name */}
         <div className="space-y-2">
-          <Label htmlFor="fullName">Full name *</Label>
+          <Label
+            htmlFor="fullName"
+            className="text-sm font-medium text-foreground"
+          >
+            Full name *
+          </Label>
 
-          <Input id="fullName" className="h-10" {...register("fullName")} />
+          <Input
+            id="fullName"
+            className="h-11 border-border bg-background focus-visible:ring-primary"
+            {...register("fullName")}
+            disabled={isPending}
+          />
 
           {errors.fullName && (
-            <p className="text-sm text-red-500">{errors.fullName.message}</p>
+            <p className="text-sm text-destructive">
+              {errors.fullName.message}
+            </p>
           )}
         </div>
 
         {/* Email */}
         <div className="space-y-2">
-          <Label htmlFor="email">Email address *</Label>
+          <Label
+            htmlFor="email"
+            className="text-sm font-medium text-foreground"
+          >
+            Email address *
+          </Label>
 
           <Input
             id="email"
             type="email"
-            className="h-10"
+            className="h-11 border-border bg-background focus-visible:ring-primary"
             {...register("email")}
+            disabled={isPending}
           />
 
           {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
+            <p className="text-sm text-destructive">{errors.email.message}</p>
           )}
         </div>
 
         {/* Password */}
         <div className="space-y-2">
-          <Label htmlFor="password">Password *</Label>
+          <Label
+            htmlFor="password"
+            className="text-sm font-medium text-foreground"
+          >
+            Password *
+          </Label>
 
           <Input
             id="password"
             type="password"
-            className="h-10"
+            className="h-11 border-border bg-background focus-visible:ring-primary"
             {...register("password")}
+            disabled={isPending}
           />
 
           {errors.password && (
-            <p className="text-sm text-red-500">{errors.password.message}</p>
+            <p className="text-sm text-destructive">
+              {errors.password.message}
+            </p>
           )}
         </div>
 
         <Button
           type="submit"
-          className="h-10 w-full text-base font-medium"
-          disabled={isSubmitting}
+          className="h-11 w-full bg-primary text-primary-foreground hover:opacity-90 text-base font-medium"
+          disabled={isPending}
         >
-          {isSubmitting ? "Creating account..." : "Create account"}
+          {isPending ? "Creating account..." : "Create account"}
         </Button>
       </form>
     </AuthLayout>

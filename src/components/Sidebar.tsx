@@ -3,34 +3,28 @@ import { NavLink } from "react-router-dom";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { useBookmarkStore } from "../store/bookmarkstore";
+import data from "../../data.json";
 
 const navLinks = [
   { to: "/", label: "Home", icon: House },
   { to: "/archived", label: "Archived", icon: Archive },
 ];
 
-const categories = [
-  { name: "AI", count: 1 },
-  { name: "Community", count: 5 },
-  { name: "Compatibility", count: 1 },
-  { name: "CSS", count: 6 },
-  { name: "Design", count: 1 },
-  { name: "Framework", count: 2 },
-  { name: "Git", count: 1 },
-  { name: "HTML", count: 2 },
-  { name: "JavaScript", count: 3 },
-  { name: "Layout", count: 3 },
-  { name: "Learning", count: 6 },
-  { name: "Performance", count: 2 },
-  { name: "Practice", count: 5 },
-  { name: "Reference", count: 4 },
-  { name: "Tips", count: 4 },
-  { name: "Tools", count: 4 },
-  { name: "Tutorial", count: 3 },
-];
+// ✅ dynamically generate categories from bookmarks
+const categories = Array.from(
+  data.bookmarks.reduce((acc, bookmark) => {
+    bookmark.tags.forEach((tag) => {
+      acc.set(tag, (acc.get(tag) || 0) + 1);
+    });
+    return acc;
+  }, new Map<string, number>()),
+).map(([name, count]) => ({
+  name,
+  count,
+}));
 
 export default function Sidebar() {
-  const { isSidebarOpen, closeSidebar, activeCategory, setActiveCategory } =
+  const { isSidebarOpen, closeSidebar, activeCategory, toggleCategory } =
     useBookmarkStore();
 
   return (
@@ -51,8 +45,7 @@ export default function Sidebar() {
           "-translate-x-full",
           isSidebarOpen && "translate-x-0",
           "lg:translate-x-0",
-        )}
-      >
+        )}>
         {/* Logo header — always visible in sidebar */}
         <div className="flex h-16 shrink-0 items-center  px-6">
           <img
@@ -72,8 +65,7 @@ export default function Sidebar() {
             variant="ghost"
             size="icon"
             onClick={closeSidebar}
-            className="ml-auto lg:hidden"
-          >
+            className="ml-auto lg:hidden">
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -95,8 +87,7 @@ export default function Sidebar() {
                       ? "bg-muted text-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )
-                }
-              >
+                }>
                 <Icon className="h-4 w-4" />
                 {label}
               </NavLink>
@@ -110,20 +101,18 @@ export default function Sidebar() {
             </p>
             <div className="space-y-1">
               {categories.map((category) => {
-                const isActive = activeCategory === category.name;
+                const isActive = activeCategory.includes(category.name);
+
                 return (
                   <button
                     key={category.name}
-                    onClick={() =>
-                      setActiveCategory(isActive ? null : category.name)
-                    }
+                    onClick={() => toggleCategory(category.name)}
                     className={cn(
                       "flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm transition-colors",
                       isActive
                         ? "bg-secondary text-secondary-foreground"
                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                    )}
-                  >
+                    )}>
                     <div className="flex items-center gap-3">
                       <div
                         className={cn(
@@ -133,6 +122,7 @@ export default function Sidebar() {
                       />
                       <span>{category.name}</span>
                     </div>
+
                     <span className="rounded-full bg-muted px-2 py-0.5 text-xs">
                       {category.count}
                     </span>

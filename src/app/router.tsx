@@ -3,6 +3,7 @@ import {
   Home,
   Login,
   Signup,
+  Archived,
   ForgotPassword,
   ResetPassword,
   NotFound,
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "/archived",
+        element: <Archived />,
       },
     ],
   },

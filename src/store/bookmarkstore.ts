@@ -1,165 +1,84 @@
 import { create } from "zustand";
-
-type Bookmark = {
-  id: string;
-  title: string;
-  url: string;
-  favicon: string;
-  description: string;
-  tags: string[];
-  visitCount: number;
-  createdAt: string;
-  pinned: boolean;
-  lastVisited: string | null;
-};
+import type { Bookmark } from "../types/bookmark";
 
 type ConfirmAction = "archive" | "unarchive" | "delete" | null;
 
 interface BookmarkStore {
-  // UI
+  // Sidebar
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
   closeSidebar: () => void;
 
-  // category
+  // Category filter
   activeCategory: string[];
   toggleCategory: (category: string) => void;
 
-  // modal
+  // Search
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+
+  // Sort
+  sortBy: "recently-added" | "recently-visited" | "most-visited" | "";
+  setSortBy: (
+    value: "recently-added" | "recently-visited" | "most-visited",
+  ) => void;
+
+  // Modal
   isModalOpen: boolean;
   modalMode: "add" | "edit";
   selectedBookmark: Bookmark | null;
-
   openAddModal: () => void;
   openEditModal: (bookmark: Bookmark) => void;
   closeModal: () => void;
 
-  // search
-  searchQuery: string;
-  setSearchQuery: (value: string) => void;
-
-  // data
-  archivedBookmarks: Bookmark[];
-
-  archiveBookmark: (bookmark: Bookmark) => void;
-  unarchiveBookmark: (id: string) => void;
-  deleteBookmark: (id: string) => void;
-
-  // confirm modal
+  // Confirm dialog
   confirmAction: ConfirmAction;
   confirmBookmark: Bookmark | null;
-
   openConfirm: (
     action: Exclude<ConfirmAction, null>,
     bookmark: Bookmark,
   ) => void;
   closeConfirm: () => void;
-  executeConfirm: () => void;
-
-  sortBy: "recently-added" | "recently-visited" | "most-visited" | "";
-
-  setSortBy: (
-    value: "recently-added" | "recently-visited" | "most-visited",
-  ) => void;
 }
 
-export const useBookmarkStore = create<BookmarkStore>((set, get) => ({
-  // UI
+export const useBookmarkStore = create<BookmarkStore>((set) => ({
+  // Sidebar
   isSidebarOpen: false,
   toggleSidebar: () =>
     set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   closeSidebar: () => set({ isSidebarOpen: false }),
 
-  // category
+  // Category filter
   activeCategory: [],
-  toggleCategory: (category) => {
-    const current = get().activeCategory;
-    const exists = current.includes(category);
+  toggleCategory: (category) =>
+    set((state) => ({
+      activeCategory: state.activeCategory.includes(category)
+        ? state.activeCategory.filter((c) => c !== category)
+        : [...state.activeCategory, category],
+    })),
 
-    set({
-      activeCategory: exists
-        ? current.filter((c) => c !== category)
-        : [...current, category],
-    });
-  },
-
-  // modal
-  isModalOpen: false,
-  modalMode: "add",
-  selectedBookmark: null,
-
-  openAddModal: () =>
-    set({ isModalOpen: true, modalMode: "add", selectedBookmark: null }),
-
-  openEditModal: (bookmark) =>
-    set({ isModalOpen: true, modalMode: "edit", selectedBookmark: bookmark }),
-
-  closeModal: () => set({ isModalOpen: false, selectedBookmark: null }),
-
-  // search
+  // Search
   searchQuery: "",
   setSearchQuery: (value) => set({ searchQuery: value }),
 
-  // archive state
-  archivedBookmarks: [],
+  // Sort
+  sortBy: "",
+  setSortBy: (value) => set({ sortBy: value }),
 
-  archiveBookmark: (bookmark) =>
-    set((state) => {
-      if (state.archivedBookmarks.some((b) => b.id === bookmark.id)) {
-        return state;
-      }
-      return {
-        archivedBookmarks: [...state.archivedBookmarks, bookmark],
-      };
-    }),
+  // Modal
+  isModalOpen: false,
+  modalMode: "add",
+  selectedBookmark: null,
+  openAddModal: () =>
+    set({ isModalOpen: true, modalMode: "add", selectedBookmark: null }),
+  openEditModal: (bookmark) =>
+    set({ isModalOpen: true, modalMode: "edit", selectedBookmark: bookmark }),
+  closeModal: () => set({ isModalOpen: false, selectedBookmark: null }),
 
-  unarchiveBookmark: (id) =>
-    set((state) => ({
-      archivedBookmarks: state.archivedBookmarks.filter((b) => b.id !== id),
-    })),
-
-  deleteBookmark: (id) =>
-    set((state) => ({
-      archivedBookmarks: state.archivedBookmarks.filter((b) => b.id !== id),
-    })),
-
-  // confirm modal
+  // Confirm dialog
   confirmAction: null,
   confirmBookmark: null,
-
   openConfirm: (action, bookmark) =>
-    set({
-      confirmAction: action,
-      confirmBookmark: bookmark,
-    }),
-
-  closeConfirm: () =>
-    set({
-      confirmAction: null,
-      confirmBookmark: null,
-    }),
-
-  executeConfirm: () => {
-    const { confirmAction, confirmBookmark } = get();
-
-    if (!confirmBookmark || !confirmAction) return;
-
-    if (confirmAction === "archive") {
-      get().archiveBookmark(confirmBookmark);
-    }
-
-    if (confirmAction === "unarchive") {
-      get().unarchiveBookmark(confirmBookmark.id);
-    }
-
-    if (confirmAction === "delete") {
-      get().deleteBookmark(confirmBookmark.id);
-    }
-
-    set({ confirmAction: null, confirmBookmark: null });
-  },
-
-  sortBy: "",
-
-  setSortBy: (value) => set({ sortBy: value }),
+    set({ confirmAction: action, confirmBookmark: bookmark }),
+  closeConfirm: () => set({ confirmAction: null, confirmBookmark: null }),
 }));

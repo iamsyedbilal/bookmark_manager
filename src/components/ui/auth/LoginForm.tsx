@@ -38,18 +38,16 @@ export default function LoginForm() {
       description="Welcome back! Please enter your details."
       footerText="Forgot password?"
       footerLinkText="Reset it"
-      footerLinkTo="/reset-password"
+      footerLinkTo="/forgot-password"
       loginExtraFooterText="Don’t have an account?"
       loginExtraFooterLink="Signup"
-      footerLinkToSignup="/signup"
-    >
+      footerLinkToSignup="/signup">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 bg-card ">
         {/* Email */}
         <div className="space-y-2">
           <Label
             htmlFor="email"
-            className="text-sm font-medium text-foreground"
-          >
+            className="text-sm font-medium text-foreground">
             Email address *
           </Label>
 
@@ -70,8 +68,7 @@ export default function LoginForm() {
         <div className="space-y-2">
           <Label
             htmlFor="password"
-            className="text-sm font-medium text-foreground"
-          >
+            className="text-sm font-medium text-foreground">
             Password *
           </Label>
 
@@ -93,8 +90,7 @@ export default function LoginForm() {
         <Button
           type="submit"
           className="h-11 w-full bg-primary text-primary-foreground hover:opacity-90 text-base font-medium"
-          disabled={isPending}
-        >
+          disabled={isPending}>
           {isPending ? "Log in account..." : "Log in"}
         </Button>
       </form>

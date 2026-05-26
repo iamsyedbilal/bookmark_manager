@@ -66,8 +66,7 @@ export default function AuthLayout({
             {footerText}{" "}
             <Link
               to={footerLinkTo}
-              className="font-medium text-foreground hover:text-primary transition-colors"
-            >
+              className="font-medium text-foreground hover:text-primary transition-colors">
               {footerLinkText}
             </Link>
           </p>
@@ -77,8 +76,7 @@ export default function AuthLayout({
               {loginExtraFooterText}{" "}
               <Link
                 to={footerLinkToSignup || "#"}
-                className="font-medium text-foreground hover:text-primary transition-colors"
-              >
+                className="font-medium text-foreground hover:text-primary transition-colors">
                 {loginExtraFooterLink}
               </Link>
             </p>

@@ -9,11 +9,16 @@ import {
   NotFound,
 } from "../pages";
 import App from "../App.tsx";
+import ProtectedRoute from "../components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,

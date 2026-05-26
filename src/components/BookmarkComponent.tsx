@@ -1,15 +1,17 @@
 import BookmarkCard from "./BookmarkCard";
 import SortBy from "./SortBy";
-import data from "../../data.json";
 import Heading from "./Heading";
 import { useBookmarkStore } from "../store/bookmarkstore";
+import { useBookmarks } from "../features/bookmarks/bookmark.queries";
 
 export default function BookmarkComponent() {
+  const { bookmarks } = useBookmarks();
+
   const searchQuery = useBookmarkStore((state) => state.searchQuery);
   const activeCategory = useBookmarkStore((state) => state.activeCategory);
   const sortBy = useBookmarkStore((state) => state.sortBy);
 
-  const filteredBookmarks = data.bookmarks.filter((bookmark) => {
+  const filteredBookmarks = bookmarks.filter((bookmark) => {
     const matchesSearch = bookmark.title
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -23,18 +25,20 @@ export default function BookmarkComponent() {
 
   const sortedBookmarks = [...filteredBookmarks].sort((a, b) => {
     if (sortBy === "recently-added") {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
     }
 
     if (sortBy === "recently-visited") {
       return (
-        new Date(b.lastVisited ?? 0).getTime() -
-        new Date(a.lastVisited ?? 0).getTime()
+        new Date(b.last_visited ?? 0).getTime() -
+        new Date(a.last_visited ?? 0).getTime()
       );
     }
 
     if (sortBy === "most-visited") {
-      return b.visitCount - a.visitCount;
+      return b.visit_count - a.visit_count;
     }
 
     return 0;
@@ -73,7 +77,7 @@ export default function BookmarkComponent() {
     xl:grid-cols-3
         ">
         {sortedBookmarks.length === 0 ? (
-          <h1>Item not available</h1>
+          <h1>No bookmarks</h1>
         ) : (
           sortedBookmarks.map((bookmark) => (
             <BookmarkCard key={bookmark.id} bookmark={bookmark} />

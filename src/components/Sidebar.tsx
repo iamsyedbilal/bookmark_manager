@@ -3,29 +3,32 @@ import { NavLink } from "react-router-dom";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { useBookmarkStore } from "../store/bookmarkstore";
-import data from "../../data.json";
+import { useBookmarks } from "../features/bookmarks/bookmark.queries";
+// import data from "../../data.json";
 
 const navLinks = [
   { to: "/", label: "Home", icon: House },
   { to: "/archived", label: "Archived", icon: Archive },
 ];
 
-// ✅ dynamically generate categories from bookmarks
-const categories = Array.from(
-  data.bookmarks.reduce((acc, bookmark) => {
-    bookmark.tags.forEach((tag) => {
+export default function Sidebar() {
+  const { bookmarks = [] } = useBookmarks();
+  const { isSidebarOpen, closeSidebar, activeCategory, toggleCategory } =
+    useBookmarkStore();
+
+  const tagMap = bookmarks.reduce((acc, bookmark) => {
+    (bookmark.tags || []).forEach((tag: string) => {
       acc.set(tag, (acc.get(tag) || 0) + 1);
     });
     return acc;
-  }, new Map<string, number>()),
-).map(([name, count]) => ({
-  name,
-  count,
-}));
+  }, new Map<string, number>());
 
-export default function Sidebar() {
-  const { isSidebarOpen, closeSidebar, activeCategory, toggleCategory } =
-    useBookmarkStore();
+  const categories = Array.from<[string, number]>(tagMap.entries()).map(
+    ([name, count]) => ({
+      name,
+      count,
+    }),
+  );
 
   return (
     <>

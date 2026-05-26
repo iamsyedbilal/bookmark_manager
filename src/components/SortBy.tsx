@@ -17,7 +17,6 @@ export default function SortBy() {
       <SelectTrigger
         className="
           w-fit
-          
           gap-2
           rounded-sm
           bg-card

@@ -1,75 +1,95 @@
-# React + TypeScript + Vite
+# 🔖 Bookmark Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern full-stack bookmark management application built with React, TypeScript, Tailwind CSS, Shadcn UI, and Supabase.
 
-Currently, two official plugins are available:
+🌐 Live Demo: https://bookmark-manager-tx3d.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- 🔐 Authentication with Supabase
+- 🌓 Dark / Light mode
+- 📁 Organize bookmarks
+- 🗂️ Archive bookmarks
+- 🔍 Fast and responsive UI
+- ⚡ React Query caching
+- 🛡️ Protected routes
+- 🚨 Error Boundary fallback UI
+- 📱 Fully responsive design
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+# 📸 Screenshots
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Home Page
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+![Home Page](./public/screenshots/home.png)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## Login Page
+
+![Login Page](./public/screenshots/login.png)
+
+---
+
+## Dark Mode
+
+![Dark Mode](./public/screenshots/dark-mode.png)
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- React Router DOM
+- Tailwind CSS
+- Shadcn UI
+- React Query
+- React Error Boundary
+
+### Backend / Services
+
+- Supabase
+- Vercel
+
+---
+
+## 📦 Installation
+
+```bash
+git clone <your-repository-url>
+cd bookmark-manager
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+## ⚙️ Environment Variables
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+Create a `.env` file:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+---
+
+## 🚀 Run Locally
+
+```bash
+npm run dev
+```
+
+---
+
+## 🏗️ Build
+
+```bash
+npm run build
 ```

@@ -18,7 +18,7 @@ export default function BookmarkComponent() {
 
     const matchesCategory =
       activeCategory.length === 0 ||
-      bookmark.tags.some((tag) => activeCategory.includes(tag));
+      bookmark.tags.some((tag: string) => activeCategory.includes(tag));
 
     return matchesSearch && matchesCategory;
   });

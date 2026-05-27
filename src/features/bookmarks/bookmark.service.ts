@@ -115,3 +115,15 @@ export async function deleteBookmark(id: string) {
 
   if (error) throw new Error(error.message);
 }
+
+export async function trackVisit(id: string, currentCount: number) {
+  const { error } = await supabase
+    .from("bookmarks")
+    .update({
+      visit_count: currentCount + 1,
+      last_visited: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+}

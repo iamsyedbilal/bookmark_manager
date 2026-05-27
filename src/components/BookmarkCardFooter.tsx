@@ -6,6 +6,7 @@ type Props = {
 };
 
 export default function BookmarkCardFooter({ bookmark }: Props) {
+  console.log(bookmark);
   return (
     <div
       className="

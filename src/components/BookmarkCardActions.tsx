@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import { useLocation } from "react-router-dom";
 import { useBookmarkStore } from "../store/bookmarkstore";
+import { useTrackVisit } from "../features/bookmarks/bookmark.queries";
 
 type Props = {
   bookmark: Bookmark;
@@ -26,6 +27,12 @@ export default function BookmarkCardActions({ bookmark }: Props) {
   const location = useLocation();
   const isArchivedPage = location.pathname === "/archived";
   const { openEditModal, openConfirm } = useBookmarkStore();
+  const { mutate: track } = useTrackVisit();
+
+  function handleVisit() {
+    window.open(bookmark.url, "_blank");
+    track({ id: bookmark.id, currentCount: bookmark.visit_count });
+  }
 
   const handleCopyUrl = async () => {
     try {
@@ -44,7 +51,7 @@ export default function BookmarkCardActions({ bookmark }: Props) {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onSelect={() => window.open(bookmark.url, "_blank")}>
+        <DropdownMenuItem onSelect={handleVisit}>
           <Eye className="mr-2 h-4 w-4" /> Visit
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleCopyUrl}>

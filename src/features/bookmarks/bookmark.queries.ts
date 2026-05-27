@@ -8,6 +8,7 @@ import {
   archiveBookmark,
   unarchiveBookmark,
   deleteBookmark,
+  trackVisit,
 } from "./bookmark.service";
 import { useBookmarkStore } from "../../store/bookmarkstore";
 import type { BookmarkFormValues } from "../../components/bookmark.schema";
@@ -110,5 +111,17 @@ export function useDeleteBookmark() {
       closeConfirm();
     },
     onError: (err: Error) => toast.error(err.message),
+  });
+}
+
+export function useTrackVisit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, currentCount }: { id: string; currentCount: number }) =>
+      trackVisit(id, currentCount),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
+    },
   });
 }

@@ -1,3 +1,16 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("/public/assets/fonts/Manrope/Manrope-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-sans: "Manrope", sans-serif;
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
